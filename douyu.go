@@ -1,12 +1,20 @@
 package main
 
 import (
+	"crypto/md5"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 
 	log "github.com/tominescu/double-golang/simplelog"
 )
+
+// thanks to https://github.com/streamlink/streamlink/blob/master/src/streamlink/plugins/douyutv.py
+const DOUYU_API_URL_PREFIX = "https://capi.douyucdn.cn/api/v1/"
+const DOUYU_API_URL_SUFFIX = "room/%s?aid=wp&cdn=%s&client_sys=wp&time=%d"
+const API_SECRET = "zNzMV1y4EMxOHS6I5WKm"
 
 type DouyuResult struct {
 	Errno int       `json:"error"`
@@ -29,8 +37,19 @@ func douyuHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(503), 503)
 		return
 	}
-	url := "https://m.douyu.com/html5/live?roomId=" + id
-	resp, err := http.Get(url)
+	cdns := [...]string{"ws", "tct", "ws2", "dl"}
+	now := time.Now().Unix()
+	suffix := fmt.Sprintf(DOUYU_API_URL_SUFFIX, id, cdns[0], now)
+	hash := md5.New()
+	hash.Write([]byte(suffix))
+	hash.Write([]byte(API_SECRET))
+	sign := fmt.Sprintf("%x", hash.Sum(nil))
+	url := DOUYU_API_URL_PREFIX + suffix + "&auth=" + sign
+	log.Debug("Douyu api url: %s", url)
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Add("User-Agent", "Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405")
+	client := &http.Client{}
+	resp, err := client.Do(req)
 	if err != nil {
 		http.Error(w, err.Error(), 503)
 		return
