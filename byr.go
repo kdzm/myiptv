@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -26,7 +27,7 @@ func byrApiHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.HasSuffix(r.URL.Path, "index.m3u8") {
 		go CurlCount(r.URL.Path)
 	}
-	MyCopy(w, resp.Body)
+	io.Copy(w, resp.Body)
 }
 
 func CurlCount(path string) {

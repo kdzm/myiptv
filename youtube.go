@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -60,7 +61,7 @@ func youtubeVideoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 	w.Header().Set("Content-type", "application/octet-stream")
-	MyCopy(w, resp.Body)
+	io.Copy(w, resp.Body)
 }
 
 func youtubeIndexHandler(w http.ResponseWriter, r *http.Request) {

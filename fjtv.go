@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -19,7 +20,7 @@ func fjtvApiHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer resp.Body.Close()
-	MyCopy(w, resp.Body)
+	io.Copy(w, resp.Body)
 }
 
 func fjtvHandler(w http.ResponseWriter, r *http.Request) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"io"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -20,7 +21,7 @@ func fourgtvTsHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer resp.Body.Close()
-	MyCopy(w, resp.Body)
+	io.Copy(w, resp.Body)
 }
 
 func fourgtvApiHandler(w http.ResponseWriter, r *http.Request) {
