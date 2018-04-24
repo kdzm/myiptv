@@ -22,7 +22,8 @@ type DouyuResult struct {
 }
 
 type DouyuData struct {
-	URL string `json:"hls_url"`
+	Status string `json:"show_status"`
+	URL    string `json:"hls_url"`
 }
 
 func douyuHandler(w http.ResponseWriter, r *http.Request) {
@@ -67,6 +68,11 @@ func douyuHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	dst := result.Data.URL
+	status := result.Data.Status
+	if status != "1" {
+		http.Error(w, "房间未开播", 403)
+		return
+	}
 	w.Header().Set("Location", dst)
 	http.Error(w, dst, 302)
 }
