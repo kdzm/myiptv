@@ -58,6 +58,7 @@ func fourgtvHandler(w http.ResponseWriter, r *http.Request) {
 	jsonStr := `{"jsonrpc":"2.0","id":12,"method":"LoadService.GetURLsNoAuth","params":{"AssetId":"` + id + `","DeviceType":"mobile","MediaType":"channel"}}`
 	req, err := http.NewRequest("POST", "https://twproxy02.svc.litv.tv/cdi/4gtv/rpc", bytes.NewBufferString(jsonStr))
 	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+	req.Header.Set("X-Forwarded-For", "114.33.75.32")
 	resp, err := gclient.Do(req)
 	if err != nil {
 		http.Error(w, err.Error(), 503)
