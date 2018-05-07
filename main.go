@@ -42,6 +42,7 @@ func main() {
 	http.HandleFunc("/videoplayback/", youtubeVideoHandler)
 	http.HandleFunc("/hi/vod/", fourgtvApiHandler)
 	http.HandleFunc("/playurl", ttcatvHandler)
+	http.HandleFunc("/httpdvb/", ttcatvHandler)
 	http.HandleFunc("/", byrApiHandler)
 	http.ListenAndServe(":8090", nil)
 }
