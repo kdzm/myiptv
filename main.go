@@ -28,6 +28,7 @@ func main() {
 	http.HandleFunc("/neu6.m3u8", neu6Handler)
 	http.HandleFunc("/neu.m3u8", neuHandler)
 	http.HandleFunc("/tuna.m3u8", tunaHandler)
+	http.HandleFunc("/bestv.m3u8", bestvHandler)
 	http.HandleFunc("/live/pool/", fourgtvTsHandler)
 	http.HandleFunc("/live/", qmHandler)
 	http.HandleFunc("/hls/", neu6tsHandler)
