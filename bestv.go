@@ -52,7 +52,9 @@ func bestvHandler(w http.ResponseWriter, r *http.Request) {
 
 	var live string
 	for _, data := range result.Data {
-		live = data.Live
+		if data.Live != "" {
+			live = data.Live
+		}
 	}
 	if live == "" {
 		http.Error(w, "no url found", 503)
