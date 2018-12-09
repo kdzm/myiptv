@@ -89,7 +89,7 @@ func youtubeIndexHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 503)
 		return
 	}
-	re := regexp.MustCompile(`hlsvp.*m3u8`)
+	re := regexp.MustCompile(`hlsvp.*?m3u8`)
 	hls := re.Find(body)
 	if len(hls) < 8 {
 		http.Error(w, "Cant't find m3u8 url", 503)
@@ -119,11 +119,11 @@ func youtubeIndexHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), 503)
 		return
 	}
-	re = regexp.MustCompile(`https://.*\.m3u8`)
+	re = regexp.MustCompile(`https://.*?\.m3u8`)
 	urls := re.FindAllString(string(body), -1)
 	seq = len(urls) - seq
 	if seq < 0 || seq >= len(urls) {
-		errStr := fmt.Sprintf("Quality not exist, total: %d", len(urls))
+		errStr := fmt.Sprintf("Quality not exist, total: %d, url: %s", len(urls), dst)
 		http.Error(w, errStr, 503)
 		return
 	}
