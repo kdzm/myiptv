@@ -20,7 +20,7 @@ func litvHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(503), 503)
 		return
 	}
-	url := "http://btsu4k5-hisng.cdn.hinet.net/live/pool/" + id + "/litv-pc/index.m3u8"
+	url := "http://btsu4k5-hisng.cdn.hinet.net:8080/live/pool/" + id + "/litv-pc/index.m3u8"
 	resp, err := http.Get(url)
 	if err != nil {
 		http.Error(w, err.Error(), 503)
