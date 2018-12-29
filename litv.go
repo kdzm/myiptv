@@ -38,7 +38,7 @@ func litvHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Cant't find m3u8 url", 503)
 		return
 	}
-	dst := "http://btsu4k5-hisng.cdn.hinet.net/live/pool/" + id + "/litv-pc/" + string(hls[len(hls)-1])
+	dst := "http://btsu4k5-hisng.cdn.hinet.net:8080/live/pool/" + id + "/litv-pc/" + string(hls[len(hls)-1])
 	w.Header().Set("Location", dst)
 	http.Error(w, dst, 302)
 }
