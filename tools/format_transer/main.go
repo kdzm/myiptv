@@ -119,6 +119,9 @@ func SearchEpg(name string) string {
 	newName = name + " HD"
 	nameSet[newName] = 1
 
+	newName = name + "HD"
+	nameSet[newName] = 1
+
 	if _, exist := epgData[name]; exist {
 		return epgData[name]
 	}
