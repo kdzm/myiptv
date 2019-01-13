@@ -93,6 +93,7 @@ func LoadEpgData() {
 	if err != nil {
 		return
 	}
+	epgData = make(map[string]string)
 	sc := bufio.NewScanner(f)
 	for sc.Scan() {
 		line_parts := strings.Split(sc.Text(), ",")
