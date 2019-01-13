@@ -89,7 +89,7 @@ func FormatR() {
 }
 
 func LoadEpgData() {
-	f, err := os.Open("epg.data")
+	f, err := os.Open("epg.txt")
 	if err != nil {
 		return
 	}
@@ -110,6 +110,9 @@ func SearchEpg(name string) string {
 	name = strings.TrimSpace(name)
 
 	newName := strings.TrimSpace(strings.TrimSuffix(name, "HD"))
+	nameSet[newName] = 1
+
+	newName = strings.TrimSpace(strings.TrimSuffix(name, "(HD)"))
 	nameSet[newName] = 1
 
 	newName = name + " HD"
