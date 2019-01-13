@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+var epgData map[string]string
+
 type Item struct {
 	Name string
 	Urls []string
@@ -27,7 +29,12 @@ func (item *Item) Add(name, url string) {
 
 func (item *Item) Print() {
 	if item.Name != "" && len(item.Urls) != 0 {
-		fmt.Printf("%s,%s\n", item.Name, strings.Join(item.Urls, "#"))
+		epg := SearchEpg(item.Name)
+		if epg != "" {
+			fmt.Printf("%s,%s,%s\n", item.Name, strings.Join(item.Urls, "#"), epg)
+		} else {
+			fmt.Printf("%s,%s\n", item.Name, strings.Join(item.Urls, "#"))
+		}
 	}
 	item.Clear()
 }
@@ -66,6 +73,7 @@ func Format() {
 }
 
 func FormatR() {
+	LoadEpgData()
 	item := NewItem()
 	sc := bufio.NewScanner(os.Stdin)
 	for sc.Scan() {
@@ -78,4 +86,42 @@ func FormatR() {
 		item.Add(line_parts[0], line_parts[1])
 	}
 	item.Print()
+}
+
+func LoadEpgData() {
+	f, err := os.Open("epg.data")
+	if err != nil {
+		return
+	}
+	sc := bufio.NewScanner(f)
+	for sc.Scan() {
+		line_parts := strings.Split(sc.Text(), ",")
+		if len(line_parts) != 2 {
+			continue
+		}
+		name := strings.TrimSpace(line_parts[0])
+		epgData[name] = strings.TrimSpace(line_parts[1])
+	}
+}
+
+func SearchEpg(name string) string {
+	nameSet := make(map[string]interface{})
+
+	name = strings.TrimSpace(name)
+
+	newName := strings.TrimSpace(strings.TrimSuffix(name, "HD"))
+	nameSet[newName] = 1
+
+	newName = name + " HD"
+	nameSet[newName] = 1
+
+	if _, exist := epgData[name]; exist {
+		return epgData[name]
+	}
+	for name, _ := range nameSet {
+		if _, exist := epgData[name]; exist {
+			return epgData[name]
+		}
+	}
+	return ""
 }
